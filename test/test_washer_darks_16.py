@@ -62,7 +62,6 @@ class TestDarks16(unittest.TestCase):
             datetime(year=2021, month=2, day=19, hour=20, minute=37),
             datetime(year=2021, month=2, day=19, hour=20, minute=40),
             datetime(year=2021, month=2, day=19, hour=20, minute=42),
-
         ]
 
         self._run(points, self.data_set, WASHER_STATE.WASHING)

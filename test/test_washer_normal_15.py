@@ -63,3 +63,6 @@ class TestNormal15(unittest.TestCase):
         ]
 
         self._run(points, self.data_set, WASHER_STATE.WASHING)
+
+if __name__ == '__main__':
+    unittest.main()
