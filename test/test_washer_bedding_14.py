@@ -3,8 +3,6 @@ from datetime import datetime
 
 import washer_state as WASHER_STATE
 from washer_data_reader import WasherDataReader
-
-import washer_state_checker
 from washer_state_checker import WasherStateChecker
 
 
