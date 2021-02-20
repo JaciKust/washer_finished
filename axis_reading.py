@@ -5,3 +5,6 @@ class AxisReading:
         self.y = y
         self.z = z
 
+    def __str__(self):
+        return 'time={0}, {1}, {2}, {3}'.format(self.time, self.x, self.y, self.z)
+
