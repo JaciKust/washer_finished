@@ -4,7 +4,7 @@ import washer_state as WASHER_STATE
 
 
 TIME_SPAN_MINUTES = 3
-WASHING_THRESHOLD = 0.7
+WASHING_THRESHOLD = 1
 SPINNING_THRESHOLD = 10
 
 class WasherStateChecker:
