@@ -7,14 +7,17 @@ TIME_SPAN_MINUTES = 3
 WASHING_THRESHOLD = 1
 SPINNING_THRESHOLD = 10
 
-class WasherStateChecker:
+class WasherDataSet:
 
     def __init__(self, dataset):
         self.dataset = dataset
 
-    def _get_data_for_time(self, time):
-        behind_point = time - timedelta(minutes=TIME_SPAN_MINUTES)
-        return list(filter(lambda x: behind_point < x.time < time, self.dataset))
+    def _get_data_for_time(self, end_time):
+        start_time = end_time - timedelta(minutes=TIME_SPAN_MINUTES)
+        return self._get_data_for_time_span(start_time, end_time)
+
+    def _get_data_for_time_span(self, start_time, end_time):
+        return list(filter(lambda x: start_time < x.time < end_time, self.dataset))
 
     def get_state(self, at_time):
         min_x = min(list(map(lambda s: s.x, self._get_data_for_time(at_time))))
@@ -36,7 +39,7 @@ class WasherStateChecker:
         # Want the one with highest range of acceleration. Doesn't matter
         # if more than one is varying. All that matters is at least one is.
         largest_range = max([range_x, range_y, range_z])
-        print('{0}'.format(largest_range))
+        # print('{0}'.format(largest_range))
 
         if largest_range >= SPINNING_THRESHOLD:
             return WASHER_STATE.SPINNING
@@ -45,3 +48,25 @@ class WasherStateChecker:
             return WASHER_STATE.WASHING
 
         return WASHER_STATE.NOT_RUNNING
+
+    def has_finished(self):
+        return False
+
+    def has_started(self):
+        return self.get_washer_start() is not None
+
+    def has_complete_run(self):
+        return False
+
+    def get_data_start(self):
+        return self.dataset[0].time
+
+    def get_data_end(self):
+        return self.dataset[len(self.dataset) -1].time
+
+    def get_washer_start(self):
+        for e in self.dataset[1:]:
+            if self.get_state(e.time).is_running():
+                return e.time
+
+        return None

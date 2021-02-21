@@ -3,19 +3,19 @@ from datetime import datetime
 
 import washer_state as WASHER_STATE
 from washer_data_reader import WasherDataReader
-from washer_state_checker import WasherStateChecker
+from washer_data_set import WasherDataSet
+import test_constant as TEST_CONTSTANT
 
-
-class TestBedding14(unittest.TestCase):
+class TestWasherDataSetGetStateBedding14(unittest.TestCase):
 
     data_set = []
 
     def setUp(self):
         r = WasherDataReader()
-        self.data_set = r.read_data('washer_test_data/14 - Bedding.csv')
+        self.data_set = r.read_data(TEST_CONTSTANT.BEDDING_14_DATA_PATH)
 
-    def _run(self, points, readings, expected_outcome):
-        w = WasherStateChecker(readings)
+    def _run_check_current_state_of_washer(self, points, readings, expected_outcome):
+        w = WasherDataSet(readings)
         for p in points:
             state = w.get_state(p)
 
@@ -31,7 +31,7 @@ class TestBedding14(unittest.TestCase):
             datetime(year=2021, month=2, day=19, hour=17, minute=20),
         ]
 
-        self._run(points, self.data_set, WASHER_STATE.NOT_RUNNING)
+        self._run_check_current_state_of_washer(points, self.data_set, WASHER_STATE.NOT_RUNNING)
 
     def test_hand_picked_spinning_normal_13(self):
         points = [
@@ -43,7 +43,7 @@ class TestBedding14(unittest.TestCase):
             datetime(year=2021, month=2, day=19, hour=18, minute=12),
         ]
 
-        self._run(points, self.data_set, WASHER_STATE.SPINNING)
+        self._run_check_current_state_of_washer(points, self.data_set, WASHER_STATE.SPINNING)
 
     def test_hand_picked_washing_normal_13_(self):
         points = [
@@ -57,7 +57,7 @@ class TestBedding14(unittest.TestCase):
             datetime(year=2021, month=2, day=19, hour=17, minute=57),
         ]
 
-        self._run(points, self.data_set, WASHER_STATE.WASHING)
+        self._run_check_current_state_of_washer(points, self.data_set, WASHER_STATE.WASHING)
 
 if __name__ == '__main__':
     unittest.main()

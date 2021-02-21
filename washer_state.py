@@ -15,6 +15,9 @@ class WasherState:
     def __str__(self):
         return self.name
 
+    def is_running(self):
+        return self.id > 0
+
+NOT_RUNNING = WasherState(0, 'Not Running')
 WASHING = WasherState(1, 'Washing')
 SPINNING = WasherState(2, 'Spin')
-NOT_RUNNING = WasherState(3, 'Not Running')
