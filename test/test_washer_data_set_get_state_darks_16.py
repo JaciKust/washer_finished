@@ -26,7 +26,7 @@ class TestWasherDataSetGetStateDarks16(unittest.TestCase):
             print(state.name)
             self.assertEqual(w.get_state(p), expected_outcome)
 
-    def test_hand_picked_not_running(self):
+    def test_state_is_not_running(self):
         points = [
             datetime(year=2021, month=2, day=19, hour=19, minute=48),
             datetime(year=2021, month=2, day=19, hour=20, minute=55),
@@ -35,19 +35,7 @@ class TestWasherDataSetGetStateDarks16(unittest.TestCase):
 
         self._run_check_current_state_of_washer(points, self.data_set, WASHER_STATE.NOT_RUNNING)
 
-    def test_hand_picked_spinning(self):
-        points = [
-            datetime(year=2021, month=2, day=19, hour=20, minute=29),
-            datetime(year=2021, month=2, day=19, hour=20, minute=30),
-            datetime(year=2021, month=2, day=19, hour=20, minute=32),
-            datetime(year=2021, month=2, day=19, hour=20, minute=47),
-            datetime(year=2021, month=2, day=19, hour=20, minute=48),
-            datetime(year=2021, month=2, day=19, hour=20, minute=50),
-        ]
-
-        self._run_check_current_state_of_washer(points, self.data_set, WASHER_STATE.SPINNING)
-
-    def test_hand_picked_washing(self):
+    def test_state_is_washing(self):
         points = [
             datetime(year=2021, month=2, day=19, hour=19, minute=54),
             datetime(year=2021, month=2, day=19, hour=20, minute=1),
@@ -65,6 +53,18 @@ class TestWasherDataSetGetStateDarks16(unittest.TestCase):
         ]
 
         self._run_check_current_state_of_washer(points, self.data_set, WASHER_STATE.WASHING)
+
+    def test_state_is_spinning(self):
+        points = [
+            datetime(year=2021, month=2, day=19, hour=20, minute=29),
+            datetime(year=2021, month=2, day=19, hour=20, minute=30),
+            datetime(year=2021, month=2, day=19, hour=20, minute=32),
+            datetime(year=2021, month=2, day=19, hour=20, minute=47),
+            datetime(year=2021, month=2, day=19, hour=20, minute=48),
+            datetime(year=2021, month=2, day=19, hour=20, minute=50),
+        ]
+
+        self._run_check_current_state_of_washer(points, self.data_set, WASHER_STATE.SPINNING)
 
 
 if __name__ == '__main__':

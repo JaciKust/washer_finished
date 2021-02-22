@@ -12,24 +12,38 @@ class WasherDataSet:
     def __init__(self, dataset):
         self.dataset = dataset
 
-    def _get_data_for_time(self, end_time):
-        start_time = end_time - timedelta(minutes=TIME_SPAN_MINUTES)
+    def sub_set(self, start_time=None, end_time=None):
+        if start_time is None:
+            start_time = self.dataset[0]
+
+        if end_time is None:
+            end_time = self.dataset[len(self.dataset) - 1]
+
+        if start_time > end_time:
+            raise Exception("start time {0} must be before end time {1}".format(start_time, end_time))
+
+        return WasherDataSet(self._get_data_for_time_span(start_time, end_time))
+
+    def _get_data_for_time(self, end_time, over_time):
+        start_time = end_time - timedelta(minutes=over_time)
         return self._get_data_for_time_span(start_time, end_time)
 
     def _get_data_for_time_span(self, start_time, end_time):
         return list(filter(lambda x: start_time < x.time < end_time, self.dataset))
 
-    def get_state(self, at_time):
-        min_x = min(list(map(lambda s: s.x, self._get_data_for_time(at_time))))
-        max_x = max(list(map(lambda s: s.x, self._get_data_for_time(at_time))))
+    def get_state(self, at_time, over_time=None):
+        if over_time is None:
+            over_time = TIME_SPAN_MINUTES
+        min_x = min(list(map(lambda s: s.x, self._get_data_for_time(at_time, over_time))))
+        max_x = max(list(map(lambda s: s.x, self._get_data_for_time(at_time, over_time))))
         range_x = abs(min_x - max_x)
 
-        min_y = min(list(map(lambda s: s.y, self._get_data_for_time(at_time))))
-        max_y = max(list(map(lambda s: s.y, self._get_data_for_time(at_time))))
+        min_y = min(list(map(lambda s: s.y, self._get_data_for_time(at_time, over_time))))
+        max_y = max(list(map(lambda s: s.y, self._get_data_for_time(at_time, over_time))))
         range_y = abs(max_y - min_y)
 
-        min_z = min(list(map(lambda s: s.z, self._get_data_for_time(at_time))))
-        max_z = max(list(map(lambda s: s.z, self._get_data_for_time(at_time))))
+        min_z = min(list(map(lambda s: s.z, self._get_data_for_time(at_time, over_time))))
+        max_z = max(list(map(lambda s: s.z, self._get_data_for_time(at_time, over_time))))
         range_z = abs(min_z - max_z)
 
         # print('X: {0} >< {1} || {2} '.format(min_x, max_x, range_x))
@@ -49,14 +63,8 @@ class WasherDataSet:
 
         return WASHER_STATE.NOT_RUNNING
 
-    def has_finished(self):
-        return False
-
     def has_started(self):
         return self.get_washer_start() is not None
-
-    def has_complete_run(self):
-        return False
 
     def get_data_start(self):
         return self.dataset[0].time
@@ -70,3 +78,4 @@ class WasherDataSet:
                 return e.time
 
         return None
+
