@@ -29,7 +29,7 @@ class WasherDataSet:
         return self._get_data_for_time_span(start_time, end_time)
 
     def _get_data_for_time_span(self, start_time, end_time):
-        return list(filter(lambda x: start_time < x.time < end_time, self.dataset))
+        return list(filter(lambda x: start_time <= x.time <= end_time, self.dataset))
 
     def get_state(self, at_time, over_time=None):
         if over_time is None:
