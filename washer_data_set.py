@@ -1,5 +1,7 @@
 from datetime import timedelta
 
+import numpy
+
 import washer_state as WASHER_STATE
 
 
@@ -78,4 +80,9 @@ class WasherDataSet:
                 return e.time
 
         return None
+
+    def __eq__(self, other):
+        return numpy.array.equal(self.dataset, other.dataset)
+
+
 
